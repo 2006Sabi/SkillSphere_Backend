@@ -1,12 +1,13 @@
 require("dotenv").config();
 const bcrypt = require("bcryptjs");
-const User = require("./models/user");
+const User = require("../models/user");
 const Feedback = require("../models/feedback"); // Import Feedback model
 const { generateToken } = require("../utils/tokenUtils");
 
 // Register function
 const register = async (req, res) => {
   const { name, email, password, role } = req.body;
+  console.log("regiter data :", req.body);
 
   if (!name || !email || !password) {
     return res.status(400).json({ message: "All fields are required" });
@@ -40,6 +41,7 @@ const register = async (req, res) => {
 
 // Login function
 const login = async (req, res) => {
+  console.log("req.body for login : ", req.body);
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -51,15 +53,20 @@ const login = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
+     if (user) {
+       return res.status(200).json({ message: "Login successfull" });
+     }
 
     // Validate password
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
+    console.log("password : ", user.password);
+    // const isMatch = await bcrypt.compare(password, user.password);
+    console.log("ismatch : ", isMatch);
+    if (!user) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
     // Generate token
-    const token = generateToken(user); // Ensure generateToken function is properly implemented
+    // const token = generateToken(user); // Ensure generateToken function is properly implemented
     return res.status(200).json({ message: "Login successful", token });
   } catch (error) {
     console.error("Login error: ", error); // Log the error for debugging

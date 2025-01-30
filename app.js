@@ -13,7 +13,15 @@ const app = express();
 // Middleware
 app.use(express.json()); // Parse JSON requests
 app.use(morgan("dev")); // Log HTTP requests
-app.use(cors({ origin: "http://localhost:5173", credentials: true })); // Allow frontend requests
+
+// Configure CORS
+app.use(
+  cors({
+    origin: "*", // Allow all origins (or replace with frontend URL for security)
+    methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
+  })
+);
 
 // Routes
 app.use("/api", authRoutes); // Use authMethods for authentication routes
